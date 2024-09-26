@@ -1,1 +1,1 @@
-![LeetCode Badge](https://leetcode-badge-showcase.vercel.app/api/Muhammad_Sameer123)
+[![LeetCode Stats](https://leetcard.jacoblin.cool/Muhammad_Sameer123?ext=activity)](https://leetcode.com/Muhammad_Sameer123/)

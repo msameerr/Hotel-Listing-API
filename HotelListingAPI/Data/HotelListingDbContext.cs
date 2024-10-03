@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace HotelListingAPI.Data
 {
     public class HotelListingDbContext : DbContext
     {
 
-        public HotelListingDbContext(DbContextOptions options) : base(options) { 
-        
-        
+        public HotelListingDbContext(DbContextOptions options) : base(options)
+        {
         }
 
         public DbSet<Hotel> Hotels { get; set; }
@@ -18,7 +19,7 @@ namespace HotelListingAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Country>().HasData(
-                
+
                 new Country
                 {
                     Id = 1,
@@ -36,6 +37,12 @@ namespace HotelListingAPI.Data
                     Id = 3,
                     Name = "United States Of America",
                     ShortName = "USA"
+                },
+                new Country
+                {
+                    Id = 4,
+                    Name = "Germany",
+                    ShortName = "Ger"
                 }
 
             );
@@ -65,6 +72,14 @@ namespace HotelListingAPI.Data
                     Address = "London",
                     CountryId = 2,
                     Rating = 4.5
+                },
+                new Hotel
+                {
+                    HotelId = 4,
+                    Name = "Hotel Germany",
+                    Address = "frankFurt",
+                    CountryId = 4,
+                    Rating = 4.3
                 }
 
             );
@@ -73,3 +88,4 @@ namespace HotelListingAPI.Data
 
     }
 }
+

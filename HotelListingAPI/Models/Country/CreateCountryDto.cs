@@ -1,10 +1,9 @@
-﻿namespace HotelListingApi.Models.Country
-{
-    public class CreateCountryDto
-    {
+﻿using System.ComponentModel.DataAnnotations;
 
-        public string Name { get; set; }
-        public string ShortName { get; set; }
+namespace HotelListingApi.Models.Country
+{
+    public class CreateCountryDto : BaseCountryDto
+    {
 
     }
 }

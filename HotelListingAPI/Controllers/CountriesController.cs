@@ -78,7 +78,7 @@ namespace HotelListingApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await CountryExists(id))
+                if (!await _countriesRepository.Exists(id))
                 {
                     return NotFound();
                 }
@@ -118,9 +118,9 @@ namespace HotelListingApi.Controllers
             return NoContent();
         }
 
-        public async Task<bool> CountryExists(int id)
-        {
-            return await _countriesRepository.Exists(id);
-        }
+        //public async Task<bool> CountryExists(int id)
+        //{
+        //    return await _countriesRepository.Exists(id);
+        //}
     }
 }

@@ -2,13 +2,12 @@
 
 namespace HotelListingApi.Models.User
 {
-    public class ApiUserDto : LoginDto
+    public class LoginDto
     {
         [Required]
-        public string FirstName { get; set; }
+        public string Email { get; set; }
         [Required]
-        public string LastName { get; set; }
-       
+        public string Password { get; set; }
     }
 
 }

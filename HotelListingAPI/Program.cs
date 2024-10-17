@@ -24,7 +24,9 @@ builder.Services.AddDbContext<HotelListingDbContext>(options =>
 // Add identity user
 builder.Services.AddIdentityCore<ApiUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<HotelListingDbContext>();
+                .AddTokenProvider<DataProtectorTokenProvider<ApiUser>>("HotelListingApi")
+                .AddEntityFrameworkStores<HotelListingDbContext>()
+                .AddDefaultTokenProviders();
 
 
 builder.Services.AddControllers();
@@ -89,6 +91,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+// add use authentication
+app.UseAuthentication();
 
 app.UseAuthorization();
 

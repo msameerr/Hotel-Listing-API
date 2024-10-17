@@ -4,7 +4,9 @@ using HotelListingApi.Data;
 using HotelListingApi.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -23,6 +25,8 @@ namespace HotelListingApi.Repository
             _configuration = configuration;
         }
 
+   
+
         public async Task<AuthResponseDto> Login(LoginDto loginDto)
         {
 
@@ -38,7 +42,8 @@ namespace HotelListingApi.Repository
             return new AuthResponseDto
             {
                 Token = token,
-                UserId = user.Id
+                UserId = user.Id,
+                RefreshToken = await CreateRefreshToken(user)
             };
 
 
@@ -94,6 +99,51 @@ namespace HotelListingApi.Repository
 
             return new JwtSecurityTokenHandler().WriteToken(token); 
 
+        }
+
+        public async Task<string> CreateRefreshToken(ApiUser user)
+        {
+
+            await _userManager.RemoveAuthenticationTokenAsync(user, "HotelListingApi", "RefreshToken");
+            var newRefreshToken = await _userManager.GenerateUserTokenAsync(user, "HotelListingApi", "RefreshToken");
+            var result = await _userManager.SetAuthenticationTokenAsync(user,"HotelListingApi", "RefreshToken", newRefreshToken);
+
+            return newRefreshToken;
+
+        }
+
+        public async Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request)
+        {
+
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+            var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.Token);
+
+            var username = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == JwtRegisteredClaimNames.Email)?.Value;
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null || user.Id != request.UserId)
+            {
+                return null;
+            }
+
+            var isValidRefreshToken = await _userManager.VerifyUserTokenAsync(user, "HotelListingApi", "RefreshToken",
+                request.RefreshToken);
+
+            if(isValidRefreshToken)
+            {
+                var token = await GenerateToken(user);
+
+                return new AuthResponseDto
+                {
+                    Token = token,
+                    UserId = user.Id,
+                    RefreshToken = await CreateRefreshToken(user)
+                };
+
+            }
+
+            await _userManager.UpdateSecurityStampAsync(user);
+            return null;
         }
 
     }

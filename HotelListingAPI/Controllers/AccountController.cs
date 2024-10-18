@@ -12,10 +12,12 @@ namespace HotelListingApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthManager _authManager;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IAuthManager authManager)
+        public AccountController(IAuthManager authManager, ILogger<AccountController> logger)
         {
             _authManager = authManager;
+            _logger = logger;
         }
 
 
@@ -29,18 +31,31 @@ namespace HotelListingApi.Controllers
         public async Task<ActionResult> Register(ApiUserDto apiUserDto)
         {
 
-            var errors = await _authManager.Register(apiUserDto);
+            _logger.LogInformation($"Registration attempt for {apiUserDto.Email}");
 
-            if(errors.Any())
+
+            try
             {
-                foreach(var error in errors)
+                var errors = await _authManager.Register(apiUserDto);
+
+                if (errors.Any())
                 {
-                    ModelState.AddModelError(error.Code, error.Description);
+                    foreach (var error in errors)
+                    {
+                        ModelState.AddModelError(error.Code, error.Description);
+                    }
+                    return BadRequest(ModelState);
                 }
-                return BadRequest(ModelState);
+
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Something Went wrong in the {nameof(Register)}");
+                throw;
             }
 
-            return Ok();
+            
         }
 
 
@@ -54,14 +69,28 @@ namespace HotelListingApi.Controllers
         public async Task<ActionResult> Login(LoginDto loginDto)
         {
 
-            var AuthResponce = await _authManager.Login(loginDto);
+            _logger.LogInformation($"Login Attempt for {loginDto.Email}");
 
-            if(AuthResponce == null)
+            try
             {
-                return Unauthorized();
+
+                var AuthResponce = await _authManager.Login(loginDto);
+
+                if (AuthResponce == null)
+                {
+                    return Unauthorized();
+                }
+
+                return Ok(AuthResponce);
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Something Went Wrong in the {nameof(Login)}");
+                throw;
             }
 
-            return Ok(AuthResponce);
+    
         }
 
 

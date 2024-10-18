@@ -17,12 +17,15 @@ namespace HotelListingApi.Repository
         private readonly IMapper _mapper;
         private readonly UserManager<ApiUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthManager> _logger;
 
-        public AuthManager(IMapper mapper, UserManager<ApiUser> userManager, IConfiguration configuration)
+        public AuthManager(IMapper mapper, UserManager<ApiUser> userManager, IConfiguration configuration,
+            ILogger<AuthManager> logger)
         {
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
+            _logger = logger;
         }
 
    
@@ -39,6 +42,9 @@ namespace HotelListingApi.Repository
             }
 
             var token = await GenerateToken(user);
+
+            _logger.LogInformation($"Token Generated for User with Email : {loginDto.Email} | Token : {token}");
+
             return new AuthResponseDto
             {
                 Token = token,

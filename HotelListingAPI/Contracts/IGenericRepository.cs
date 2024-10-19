@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using HotelListingApi.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace HotelListingApi.Contracts
 {
@@ -11,6 +12,8 @@ namespace HotelListingApi.Contracts
         Task DeleteAsync(int id);
         Task UpdateAsync(T entity);
         Task<bool> Exists(int id);
+
+        Task<PageResult<TResult>> GetPagedAll<TResult>(QueryParameters queryParameters);
 
 
     }

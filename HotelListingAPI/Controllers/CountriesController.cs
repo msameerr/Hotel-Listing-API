@@ -12,6 +12,7 @@ using HotelListingApi.Contracts;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
 using HotelListingApi.Exceptions;
+using HotelListingApi.Models;
 
 namespace HotelListingApi.Controllers
 {
@@ -43,6 +44,18 @@ namespace HotelListingApi.Controllers
             
         }
 
+        // GET: api/Countries/GetPaged/StartIndex=0&PageSize=10
+        [HttpGet("GetPaged")]
+        public async Task<ActionResult<PageResult<GetCountryDto>>> GetPagedCountries([FromQuery] QueryParameters 
+            queryParameters)
+        {
+
+            var PagedCountriesResult = await _countriesRepository.GetPagedAll<GetCountryDto>(queryParameters);
+            return PagedCountriesResult;
+
+        }
+
+         
         // GET: api/Countries/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CountryDto>> GetCountry(int id)

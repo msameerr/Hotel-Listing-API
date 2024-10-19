@@ -1,6 +1,7 @@
 using HotelListingApi.Configurations;
 using HotelListingApi.Contracts;
 using HotelListingApi.Data;
+using HotelListingApi.Middleware;
 using HotelListingApi.Repository;
 using HotelListingAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -78,6 +79,15 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
+// Add Caching
+builder.Services.AddResponseCaching(options =>
+{
+
+    options.MaximumBodySize = 1024;
+    options.UseCaseSensitivePaths = true;
+
+});
+
 
 var app = builder.Build();
 
@@ -88,9 +98,32 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+
+// For caching
+app.UseResponseCaching();
+
+app.Use(async (context, next) =>
+{
+
+    context.Response.GetTypedHeaders().CacheControl =
+        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+        {
+            Public = true,
+            MaxAge = TimeSpan.FromSeconds(10)
+        };
+
+    context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+        new string[] { "Accept-Encoding" };
+
+    await next();
+
+});
 
 // add use authentication
 app.UseAuthentication();

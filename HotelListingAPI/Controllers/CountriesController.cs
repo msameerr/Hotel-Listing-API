@@ -13,6 +13,7 @@ using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
 using HotelListingApi.Exceptions;
 using HotelListingApi.Models;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace HotelListingApi.Controllers
 {
@@ -34,6 +35,7 @@ namespace HotelListingApi.Controllers
 
         // GET: api/Countries
         [HttpGet]
+        [EnableQuery]
         public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
 

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HotelListingAPI.Data;
-using HotelListingApi.Contracts;
+using HotelListingApi.Data;
+using HotelListingApi.Core.Contracts;
 using AutoMapper;
-using HotelListingApi.Models.Hotel;
-using HotelListingApi.Models;
+using HotelListingApi.Core.Models.Hotel;
+using HotelListingApi.Core.Models;
 
 namespace HotelListingApi.Controllers
 {

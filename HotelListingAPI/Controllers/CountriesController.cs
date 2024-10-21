@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HotelListingAPI.Data;
-using HotelListingApi.Models.Country;
+using HotelListingApi.Data;
+using HotelListingApi.Core.Models.Country;
 using AutoMapper;
-using HotelListingApi.Contracts;
+using HotelListingApi.Core.Contracts;
 using SQLitePCL;
 using Microsoft.AspNetCore.Authorization;
-using HotelListingApi.Exceptions;
-using HotelListingApi.Models;
+using HotelListingApi.Core.Exceptions;
+using HotelListingApi.Core.Models;
 using Microsoft.AspNetCore.OData.Query;
 
 namespace HotelListingApi.Controllers
